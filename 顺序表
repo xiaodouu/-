@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include<string.h>
+
+
+#define Maxsize 20
+
+typedef struct{
+	int data[Maxsize];
+	int length;
+}sqlist;
+
+bool insert(sqlist &l,int i,int e) {//重新练习
+	if (i<1 || i>l.length + 1)return false;
+	if (i > Maxsize + 1)return false;
+	for (int j = l.length;j >= i;j--) {
+		l.data[j-1+1] = l.data[j - 1];
+	}
+	l.data[i - 1] = e;
+	l.length++;
+	return true;
+}
+void initlist(sqlist &L){   //要求返回
+	for (int i = 0;i < Maxsize;i++) {
+		L.data[i] = i;   //表中l.data 初始化为0
+		L.length = i; //初始长度为0
+	}
+		          
+}
+int del(sqlist& l, int i) {
+	int j = i;int delnum;
+	delnum = l.data[j - 1];
+	if (i<1 || i>l.length + 1)return false;
+	if (i > Maxsize + 1)return false;
+	for (j;j <= l.length;j++) {
+		l.data[j - 1] = l.data[j];
+
+	}
+	l.length--;
+	return delnum;
+}
+int* search_by_key(sqlist& l, int key) {
+	int k[Maxsize]={0};
+	int j=0;
+	for (int i = 0;i <= l.length;i++) {
+		if (l.data[i] == key) {
+			k[j]=i+1;
+			printf("%d\n", k[j]);
+			j++;
+		}			
+	}
+
+	return k;
+}
+void main() {
+	sqlist l;
+	initlist(l); //初始化
+	insert(l, 1, 5);//插入（表，位置，值）//在第一位是data[0]
+	//del(l, 2);
+	search_by_key(l, 5);
+
+}
