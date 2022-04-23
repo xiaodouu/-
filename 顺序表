@@ -1,32 +1,39 @@
 #include <stdio.h>
 #include<string.h>
-
-
+#include<math.h>
 #define Maxsize 20
-
-typedef struct{
+#define infinite 2147483647
+typedef struct {
 	int data[Maxsize];
 	int length;
 }sqlist;
 
-bool insert(sqlist &l,int i,int e) {//重新练习
+bool insert(sqlist& l, int i, int e) {//在l中第i给位置插入e
 	if (i<1 || i>l.length + 1)return false;
 	if (i > Maxsize + 1)return false;
 	for (int j = l.length;j >= i;j--) {
-		l.data[j-1+1] = l.data[j - 1];
+		l.data[j - 1 + 1] = l.data[j - 1];
 	}
 	l.data[i - 1] = e;
 	l.length++;
 	return true;
 }
-void initlist(sqlist &L){   //要求返回
-	for (int i = 0;i < Maxsize;i++) {
-		L.data[i] = i;   //表中l.data 初始化为0
-		L.length = i; //初始长度为0
+void initlist(sqlist& l) {
+	int i;
+	for (i = 1;i <= Maxsize;i++) {//全部写为NULL
+		l.data[i - 1] = NULL;   
+		//printf("data[%d]=%d\n", i, l.data[i]);
 	}
-		          
+	for (i = 1;i <= Maxsize;i++) {//赋值
+		l.data[i] = i;   
+		l.length = i; //初始长度为0
+		//printf("data[%d]=%d\n", i, l.data[i]);
+	}
 }
-int del(sqlist& l, int i) {
+	
+
+
+int del(sqlist& l, int i) {//删除l中第i个元素
 	int j = i;int delnum;
 	delnum = l.data[j - 1];
 	if (i<1 || i>l.length + 1)return false;
@@ -38,24 +45,162 @@ int del(sqlist& l, int i) {
 	l.length--;
 	return delnum;
 }
-int* search_by_key(sqlist& l, int key) {
-	int k[Maxsize]={0};
-	int j=0;
+//int* search_by_key(sqlist& l, int key) {//返回数组
+	//int k[Maxsize] = { 0 };
+	//int j = 0;
+	//for (int i = 0;i <= l.length;i++) {
+	//	if (l.data[i] == key) {
+	//		k[j] = i + 1;
+	//		printf("%d\n", k[j]);
+	//		j++;
+//		}
+//	}
+
+//	return k;
+//}
+
+int search_by_key(sqlist& l, int key) {
+	int k =  0 ;
 	for (int i = 0;i <= l.length;i++) {
 		if (l.data[i] == key) {
-			k[j]=i+1;
-			printf("%d\n", k[j]);
-			j++;
-		}			
+			k= i + 1;
+			printf("查找的%d在第%d位\n", key,k);			
+		}
 	}
 
 	return k;
 }
-void main() {
-	sqlist l;
-	initlist(l); //初始化
-	insert(l, 1, 5);//插入（表，位置，值）//在第一位是data[0]
-	//del(l, 2);
-	search_by_key(l, 5);
 
+int max(sqlist& l) {//2-1找到最小值并删除
+	if (l.length == 0)return -1;
+	int k = 0;int j = l.data[0];
+	for (int i = 1;i <= l.length;i++) {
+		if (j < l.data[i - 1]) {
+			j = l.data[i - 1];
+		}
+	}
+	//k = search_by_key(l, j);//找到j的位置
+	//j = del(l, k);//删除
+	//l.data[k - 1] = l.data[l.length - 1];
+	return j;
+
+}
+int min(sqlist& l) {//2-1找到最小值并删除
+	if (l.length == 0)return -1;
+	int k = 0;int j = l.data[0];
+	for (int i = 1;i <= l.length;i++) {
+		if (j > l.data[i - 1]) {
+			j = l.data[i - 1];
+		}
+	}
+	k = search_by_key(l, j);
+	j = del(l, k);
+	l.data[k - 1] = l.data[l.length - 1];
+	return j;
+
+}
+void func3(sqlist& l,int x) {//删除所有值为x的元素，对时间空间复杂度有要求
+	int num[Maxsize];int k=0;
+	for (int i = 1;i <= l.length;i++) {
+		if (l.data[i - 1] != x) {
+			num[k] = l.data[i - 1];
+			k++;
+		}
+	}
+
+	l.length = k;
+	for (int i = 0;i < k;i++)printf("%d\n", num[i]);
+}
+
+void func4(sqlist& l, int s, int t) {
+	//与func3类似
+}
+void func6(sqlist& l) {//删除所有重复值
+	int num[Maxsize]={0};
+	//num[0] = l.data[0];
+	int i;int j;
+	for (i = 1,j =1;i <= Maxsize;j++) {
+		if (l.data[i - 1] != l.data[j]) {
+			l.data[i++] = l.data[j];
+		}
+		
+	}
+		printf("%d", *l.data);
+	
+}
+
+int* func7(sqlist& l1, sqlist& l2) {//两个有序表合成并排序
+	for (int i = 1;i <= l1.length;i++) {
+		for (int j = 1;j <= l2.length;j++) {
+			if(l1.data[i-1]<=l2.data[j-1]) {
+				insert(l2, j, l1.data[i - 1]);
+				break;
+			}
+		}
+	}
+	l2.length += l1.length;
+	return l2.data;
+}
+
+bool func10(sqlist &l,int p) {//将序列中每个元素左移p个单位
+	for (int i = 1;i <= p;i++) {
+		if (l.data[i-1] != NULL)return false;
+	}
+	int i;int j;
+	for ( i = 1, j = p;i <= Maxsize-p;i++) {
+		l.data[i - 1] = l.data[j++];
+	}
+	return true;
+}
+int func11(sqlist& l, sqlist& l2) {
+	func7(l, l2);
+	int val = (l2.data[l2.length / 2] + l2.data[l2.length / 2 + 1]) / 2;
+	return val;
+}
+int func12(sqlist& l) {//找到数组中出现次数大于长度一半的数，没有就返回-1
+	int val;int times = 0;
+	val = l.data[0];
+	for (int i = 1;i <= l.length;i++) {
+		if (val == l.data[i - 1])times++;
+		else times--;
+		if (times <= 0)val = l.data[i];
+
+	}
+	if (times > 0)return val;
+	else return -1;
+
+}
+int func13(sqlist& l) {//输出未出现的最小正整数
+	int t = 0;int j;
+	for (j = 1;j <= max(l);j++) {
+		for (int i = 1;i <= l.length;i++) {
+		
+			if (j == l.data[i - 1]) {
+				t += 1;break;
+			}
+		}
+		if (t == 0) {
+			break;
+		}
+		else { t = 0; }
+	}
+	return j;
+}
+int func14(sqlist& l1, sqlist& l2, sqlist& l3) {//三元组//还有更优解待完善
+	int val;int min = infinite;
+	for (int i = 1;i <= l1.length;i++) {
+		for (int j = 1;j <= l2.length;j++) {
+			for (int k = 1;k <= l3.length;k++) {
+				val = abs(l1.data[i - 1] - l2.data[i - 1]) + abs(l2.data[i - 1] - l3.data[i - 1]) + abs(l1.data[i - 1] - l3.data[i - 1]);
+				if (val < min) {
+					min = val;
+				}
+			}
+		}
+	}
+	return min;
+}
+void main() {
+	sqlist l1;
+	initlist(l1); //初始化
 }
