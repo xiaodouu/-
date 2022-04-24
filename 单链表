@@ -1,0 +1,230 @@
+#include <iostream>
+#include<stdio.h>
+
+#define infinite 2147483647
+
+
+
+typedef struct lnode {
+    int data;
+    struct lnode* next;
+}lnode, * linklist;
+
+
+linklist list_headinsert(linklist &l) {//头插法建立单链表//是倒序
+    lnode* s;int x;
+    l = (linklist)malloc(sizeof(lnode)); //创建头结点
+    l->next=NULL;//头结点指向NULL
+    l->data = NULL;
+    scanf_s("%d", &x);//用户输入值
+    while (x != 10086) {//停止
+        s = (linklist)malloc(sizeof(lnode));
+        s->data = x;
+        s->next = l->next;
+        l->next = s;
+        scanf_s("%d", &x);
+    }
+    return l;
+}
+
+linklist list_backinsert(linklist& l) {//尾插法需要指向最后一个袁素的指针
+    l = (linklist)malloc(sizeof(lnode));
+    lnode* s;int x;lnode* p = l;//p指向尾结点，l指向第一个节点
+    l->data = NULL;
+    l->next = NULL;
+    scanf_s("%d", &x);
+    while (x != 10086) {
+        s = (linklist)malloc(sizeof(lnode));
+        s->data = x;
+        p->next = s;
+        s->next = NULL;
+        p = s;
+        scanf_s("%d", &x);
+    }
+    return l;
+}
+lnode* search_by_order(linklist& l, int x) {//按序查找
+    if (x < 0) {
+        return NULL;
+    }
+    else if (x==0)
+    {
+        return l;
+    }
+    lnode* s=l->next;//l指向第一个结点
+    for (int j = 1;j < x;j++) {
+        s = s->next;
+    }
+    return s;
+}
+lnode* search_by_val(linklist& l, int x) {//按值查找
+    if (x < 0) {
+        return NULL;
+    }
+    else if (x == 0)
+    {
+        return l;
+    }
+    lnode* s = l->next;//l指向第一个结点
+    while (s->data!=x) {
+        s = s->next;
+    }
+    return s;
+}
+int length(linklist& l) {
+    lnode* s = l->next;int j = 1;
+    while (s !=NULL) {
+        s = s->next;
+        j++;
+    }
+    return j-1;
+}
+linklist del_by_val(linklist& l, int x) {
+    lnode* s1 = l->next;lnode* s2=l;
+    int length1 = length(l);
+    for (int j = 1;j <= length1;j++) {
+        if (s1->data == x) {
+            s2->next = s1->next;
+            s1->next = NULL;
+            s1 = s2->next;
+        }
+        else {
+            s1 = s1->next;
+            s2 = s2->next;
+        }
+        
+    }
+    return l;
+}
+void print_backwards(linklist l) {//反向输出
+    lnode* s = l->next;
+    if (l->next != NULL) {
+        print_backwards(l->next);
+    }
+    if (l->data!= NULL) {
+        printf("%d\n", l->data);
+    }
+
+}
+
+void min(linklist l) {//找到最小值并输出
+    int val = infinite;
+    lnode* s = l->next;
+    int len = length(l);
+    for (int i = 1;i <= len;i++) {
+        if (s->data < val) {
+            val = s->data;
+            s = s->next;
+
+        }
+    }
+    printf("%d", val);
+
+}
+linklist func5(linklist& l) {//就地逆置
+    lnode* s1, * s2, * s3;
+    int len = length(l);
+    if (len == 1) {
+        return l;
+    }
+    else if (len == 2) {
+        s3 = l;
+        s1 = l->next;
+        s2 = s1->next;
+        s2->next = s1;
+        s1->next = NULL;
+        l->next = s2;
+    }
+    else {
+        s1 = l->next;
+        s2 = s1->next;
+        s3 = s2->next;
+        for (int i = 1;i <= len-3;i++) {
+        if (s3->next != NULL) {
+            if (int i = 1)s1->next = NULL;
+            s2->next = s1;
+            s1 = s2;
+            s2 = s3;
+            s3 = s3->next;
+        }      
+    } 
+    s2->next = s1;
+    s3->next = s2;
+    l->next = s3;
+    }        
+    return l;
+}
+linklist in_order_incre(linklist& l) {//升序排列
+    lnode* s, * p, * t, * k, * z;
+    int len = length(l);int y;
+    k = NULL;z = NULL;
+    t = l;
+    s = l->next;
+    p = s->next;
+    for (y = 1;y < len;y++) {
+        for (int i = 1;i <= len-y;i++) {
+            if (p->data < s->data) {
+                s = p;
+            }
+            p = p->next;
+        }
+        while (t->next != s) {
+            t = t->next;
+        }
+        t->next = s->next;
+        if (y == 1) {
+            k = s;
+            z = s;
+        }
+        else {
+            k->next = s;
+            k = k->next;
+        }
+        t = l;
+        s = l->next;
+        p = s->next;
+
+    } 
+    l->next = z;
+    k->next = s;
+    return l;
+}
+
+linklist in_order_decline(linklist& l) {//降序排列
+    in_order_incre(l);
+    func5(l);
+    return l;
+}
+
+lnode* func8(linklist l1, linklist l2) {//找到公共结点
+    lnode* s1, * s2;
+    s1 = l1->next;s2 = l2->next;
+    while (s1 != s2) {
+        while (s1!=s2)
+        {
+            s1 = s1->next;
+
+        }
+        s2 = s2->next;
+    }
+    return s1;
+}
+
+
+int main()
+{
+    linklist l;
+    linklist l2;
+    list_headinsert(l);
+    list_headinsert(l2);
+   // list_backinsert(l);
+    //search_by_val(l, 1);
+    //del_by_val(l, 2);
+    //print_backwards(l);
+    //min(l);
+    //func5(l);
+    //in_order_decline(l);
+    //func8(l, l2);
+    free(l);
+}
+
