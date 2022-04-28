@@ -210,21 +210,90 @@ lnode* func8(linklist l1, linklist l2) {//找到公共结点
     return s1;
 }
 
+int func22(linklist& l,int k) {//输出倒数k个结点
+    
+    lnode * head;
+    int len = length(l);int t=1;
+    head = l->next;
+    if (head == NULL && k <= 0)return -1;
+    while (t != len - k+1) {
+        t++;
+        head = head->next;
+    }
+    printf("%d", head->data);
+    return 1;
+}
 
+lnode* func23(linklist l, linklist l2) {//未测试
+    int  lens1 = length(l);int lens2 = length(l2);
+    lnode* s1, * s2;
+    s1 = l->next;s2 = l->next;
+    for (int i = 1;i <= lens1;i++) {
+        for (int j = 1;j <= lens2;j++) {
+            if(s1!=s2){
+                s2 = s2->next;
+            }
+            else {
+                return s1;
+                break;
+            }
+            
+        }
+        if (s1 != s2) {
+            s1 = s1->next;
+        }
+        else {
+            return s1;
+            break;
+        }
+        
+    }
+}
+
+linklist func24(linklist &l) {//保留第一次出现的结点并删除其余绝对值相等的结点
+    //int tag;
+    int len = length(l);
+    lnode* s, * p;
+    
+    p = l->next;
+    s = p->next;
+    for (int i = 1;i < len;i++) {
+        for (int j = 1; j <= i;j++) {
+            if (abs(s->data) == abs(p->data)) {
+                p->next = s->next;               
+            }
+            p = p->next;
+        }
+        s = s->next;
+        p = l->next;
+    }
+    return l;
+}
+linklist func25(linklist& l) {
+    int len = length(l);
+    lnode* s, * p, * t;
+    s = l->next;
+    p = l->next;
+    while (p->next != NULL) {
+        p = p->next;
+    }
+    t = s;
+    for(int i = 1;i <= int(len / 2);i++) {
+        p->next = s->next;
+        s->next = p;
+        s = p->next;
+        t = s;
+        while (t->next != p) {
+            t = t->next;
+        }
+        p = t;
+    }
+    return l;
+}
 int main()
 {
     linklist l;
-    linklist l2;
     list_headinsert(l);
-    list_headinsert(l2);
-   // list_backinsert(l);
-    //search_by_val(l, 1);
-    //del_by_val(l, 2);
-    //print_backwards(l);
-    //min(l);
-    //func5(l);
-    //in_order_decline(l);
-    //func8(l, l2);
     free(l);
 }
 
